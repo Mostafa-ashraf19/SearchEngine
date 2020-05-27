@@ -27,6 +27,7 @@ private slots:
 
 private:
     Ui::Layout *ui;
+    void GetFiles(int NumberofFile);
 
 };
 #endif // LAYOUT_H
