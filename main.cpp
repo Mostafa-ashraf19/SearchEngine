@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QFile>
 #include <QTextStream>
+#include<QStackedWidget>
 
 QString readTextFile(QString path)
 {
@@ -14,7 +15,7 @@ QString readTextFile(QString path)
     }
     return "";
 }
-#include<QStackedWidget>
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -26,6 +27,7 @@ int main(int argc, char *argv[])
 
     w.setWindowFlags(  Qt::WindowMinimizeButtonHint  | Qt::WindowSystemMenuHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint );
     w.setWindowTitle("FindLy");
+
     w.show();
     w.setFixedSize(700,400);
     return a.exec();
