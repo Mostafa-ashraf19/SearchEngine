@@ -20,9 +20,15 @@ Layout::Layout(QWidget *parent)
     QtAwesome* awesome = new QtAwesome(this);
     awesome->initFontAwesome();     // This line is important as it loads the font and initializes the named icon map
     ui->Backbutton->setIcon(awesome->icon(fa::arrowleft));
+    ui->FrontButton->setIcon(awesome->icon(fa::arrowright));
 
-    int TrieBuildTime = 10;
-    ui->statusBar->showMessage("Time To build Trie: "+QString::number(TrieBuildTime));
+    //if(Trie.build_trie("E:/tgroba/SearchEngine/DataSet/"))
+    //  ui->pushButton->setVisible(false);
+    //ui->statusBar->showMessage("Build Finish,     Time To Build: "+QString::number(Trie.TimeBulding())+" Sec");
+
+    ui->progressBar->setValue(0);
+    ui->progressBar->setRange(0,100);
+    ui->progressBar->setValue(0);
     // ||||||||
     ui->progressBar->setVisible(false);
 
@@ -35,27 +41,10 @@ Layout::~Layout()
 
 void Layout::on_ExploreFiles_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(1);
 
-   /* QFont font;
-    for(int i=0;i<50;i++)
-    {
-        QFile file("E:/lastds/SearchEngine/backend/questions/"+QString::number(i)+".txt");
-        if (!file.open(QIODevice :: ReadOnly))
-        {
-            QMessageBox :: information(this,"a","b");
-        }
-        QTextStream in(&file);
-        QString str = file.fileName();
-        QStringList parts = str.split("/");
-        QString lastBit = parts.at(parts.size()-1);
-        font.setBold(true);
-        ui->textEdit->setCurrentFont(font);
-        ui-> textEdit ->insertPlainText(lastBit + "\n");
-        font.setBold(false);
-        ui->textEdit->setCurrentFont(font);
-        ui-> textEdit ->insertPlainText(in.readAll() + "\n" );
-    }*/
+    GetFiles(RetVal);
+    ui->stackedWidget->setCurrentIndex(1);
+   // ui->progressBar->setVisible(false);
 }
 
 void Layout::on_Backbutton_clicked()
@@ -65,27 +54,36 @@ void Layout::on_Backbutton_clicked()
 
 void Layout::on_SearchButton_clicked()
 {
-//
-    ui->progressBar->setVisible(true);
+    ui->textEdit->clear();
     // first val
     std::string SearchValue = ui->lineEdit->text().toStdString();
     // call search
-    int numberoffiles = 50/* val */;
-    // sec val
+    RetVal = Trie.search(SearchValue); /*list*/ ;
+    int NumberOfWords = Trie.WordCounts();/* val */;
 
-    GetFiles(numberoffiles);//edit
+    ui->lineEdit_2->setText(QString::number(NumberOfWords));
+    ui->statusBar->showMessage("Searching Time: "+QString::number(Trie.SearchingTime())+" Sec");
 }
 
-void Layout::GetFiles(int NumberofFile)
+void Layout::GetFiles(std::list<int> FileNames)
 {
     QFont font;
-    for(int i=0;i<NumberofFile;i++)
+    ui->progressBar->setVisible(true);
+    if(FileNames.empty())
     {
-       // QFile file("E:/lastds/SearchEngine/backend/questions/"+QString::number(i)+".txt");
-        QFile file(":/questions/"+QString::number(i)+".txt");
+         ui->statusBar->showMessage("Not Find");
+         return;
+    }
+    int i=FileNames.size();
+    ui->progressBar->setValue(10);
+    for(auto& File: FileNames)
+    {
+       // QFile file("E:/tgroba/SearchEngine/DataSet/"+QString::number(File)+".txt");
+        QFile file("DataSet/"+QString::number(File)+".txt");
         if (!file.open(QIODevice :: ReadOnly))
         {
             QMessageBox ::warning(this,"Opening Problem","Current Files Not Found");
+            return;
         }
         QTextStream in(&file);
         QString str = file.fileName();
@@ -97,5 +95,23 @@ void Layout::GetFiles(int NumberofFile)
         font.setBold(false);
         ui->textEdit->setCurrentFont(font);
         ui-> textEdit ->insertPlainText(in.readAll() + "\n" );
+        QCoreApplication::processEvents();
+        ui->progressBar->setValue(50);
     }
+    ui->progressBar->setValue(100);
+    //QCoreApplication::postEvent(ui->progressBar,ui->progressBar->valueChanged(10));
+}
+void Layout::on_pushButton_clicked()
+{
+   Trie.build_trie("E:/tgroba/SearchEngine/DataSet/");
+   QCoreApplication::processEvents();
+   ui->pushButton->setVisible(false);
+   ui->statusBar->showMessage("Build Finish,     Time To Build: "+QString::number(Trie.TimeBulding())+" Sec");
+}
+
+void Layout::on_FrontButton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+    QCoreApplication::processEvents();
+    ui->progressBar->setVisible(false);
 }
