@@ -8,12 +8,9 @@
 using namespace std;
 struct node
 {
-
 	list<int> v;
 	int count = 0;
 	unordered_map<char, node*> child;
-
-
 };
 
 class trie
