@@ -39,7 +39,7 @@ These instructions will get you a copy of the project up and running on your loc
 ## Installation and building process :
 1. Install exe
 ``` 
-exe source file: 
+exe source file: https://github.com/Mostafa-ashraf19/SearchEngine/blob/master/Project%20Reference/FindLy.exe
 ``` 
 2. Run it
  
@@ -58,7 +58,7 @@ exe source file:
 ![UML2](https://raw.githubusercontent.com/Mostafa-ashraf19/SearchEngine/master/Project%20Reference/activity%20(1).jpeg)
   
 ## Deployment
-  - Soon
+  - Windows Package: https://github.com/Mostafa-ashraf19/SearchEngine/blob/master/Project%20Reference/FindLy.exe
   
   
 
