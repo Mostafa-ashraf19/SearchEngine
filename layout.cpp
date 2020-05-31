@@ -59,6 +59,7 @@ void Layout::on_SearchButton_clicked()
     std::string SearchValue = ui->lineEdit->text().toStdString();
     // call search
     RetVal = Trie.search(SearchValue); /*list*/ ;
+    QCoreApplication::processEvents();
     int NumberOfWords = Trie.WordCounts();/* val */;
 
     ui->lineEdit_2->setText(QString::number(NumberOfWords));
@@ -76,10 +77,17 @@ void Layout::GetFiles(std::list<int> FileNames)
     }
     int i=FileNames.size();
     ui->progressBar->setValue(10);
+    QFont font2;
+    QColor color;
+    QColor color2;
+    color.setRed(200);
+    color2.setBlue(200);
+    font2.setBold(true);
+    font2.setPointSize(12);
     for(auto& File: FileNames)
     {
        // QFile file("E:/tgroba/SearchEngine/DataSet/"+QString::number(File)+".txt");
-        QFile file("DataSet/"+QString::number(File)+".txt");
+        QFile file("D:/dataStructure/questions/"+QString::number(File)+".txt");
         if (!file.open(QIODevice :: ReadOnly))
         {
             QMessageBox ::warning(this,"Opening Problem","Current Files Not Found");
@@ -89,21 +97,22 @@ void Layout::GetFiles(std::list<int> FileNames)
         QString str = file.fileName();
         QStringList parts = str.split("/");
         QString lastBit = parts.at(parts.size()-1);
-        font.setBold(true);
-        ui->textEdit->setCurrentFont(font);
+        ui->textEdit->setCurrentFont(font2);
+        ui->textEdit->setTextColor(color);
         ui-> textEdit ->insertPlainText(lastBit + "\n");
-        font.setBold(false);
-        ui->textEdit->setCurrentFont(font);
+        ui->textEdit->setTextColor(color2);
         ui-> textEdit ->insertPlainText(in.readAll() + "\n" );
-        QCoreApplication::processEvents();
-        ui->progressBar->setValue(50);
     }
+    QCoreApplication::processEvents();
+    QTextCursor textCursor = ui->textEdit->textCursor();
+    textCursor.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor,1);
+    ui->textEdit->setTextCursor(textCursor);
     ui->progressBar->setValue(100);
     //QCoreApplication::postEvent(ui->progressBar,ui->progressBar->valueChanged(10));
 }
 void Layout::on_pushButton_clicked()
 {
-   Trie.build_trie("E:/tgroba/SearchEngine/DataSet/");
+   Trie.build_trie("D:/dataStructure/questions/");
    QCoreApplication::processEvents();
    ui->pushButton->setVisible(false);
    ui->statusBar->showMessage("Build Finish,     Time To Build: "+QString::number(Trie.TimeBulding())+" Sec");
@@ -114,4 +123,14 @@ void Layout::on_FrontButton_clicked()
     ui->stackedWidget->setCurrentIndex(1);
     QCoreApplication::processEvents();
     ui->progressBar->setVisible(false);
+}
+
+void Layout::on_searchForward_clicked()
+{
+    ui->textEdit->find(ui->lineEdit->text());
+}
+
+void Layout::on_searchBackward_clicked()
+{
+    ui->textEdit->find(ui->lineEdit->text(),QTextDocument::FindBackward);
 }

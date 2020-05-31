@@ -27,6 +27,10 @@ private slots:
     void on_pushButton_clicked();
     void on_FrontButton_clicked();
 
+    void on_searchForward_clicked();
+
+    void on_searchBackward_clicked();
+
 private:
 
     Ui::Layout *ui;
